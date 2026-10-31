@@ -1,0 +1,2468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lekas Pulih — Pesan & Doa Hangat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&family=Alex+Brush&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-cream: #FAF7F2;
+      --bg-gradient: radial-gradient(circle at 50% 25%, #FFFDFB 0%, #F6EFE5 55%, #ECE2D0 100%);
+      --gold-primary: #C5A059;
+      --gold-light: #F3E5AB;
+      --gold-dark: #8E6F34;
+      --gold-metallic: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
+      --gold-glow: rgba(197, 160, 89, 0.4);
+      --text-dark: #2D2823;
+      --text-muted: #73695F;
+      --paper-white: #FFFFFF;
+      --warm-shadow: 0 16px 36px rgba(142, 111, 52, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05);
+      --envelope-color: #F8F5EE;
+      --envelope-shadow: 0 20px 45px rgba(110, 85, 35, 0.16);
+      --ui-glass: rgba(255, 255, 255, 0.88);
+      --ui-border: rgba(197, 160, 89, 0.3);
+    }
+
+    /* Mode Redup Mata (Bebas Silau untuk Penderita Sakit Kepala/Pusing) */
+    body.soothing-mode {
+      --bg-cream: #1C1916;
+      --bg-gradient: radial-gradient(circle at 50% 25%, #25211B 0%, #171512 60%, #0F0E0C 100%);
+      --text-dark: #EDE5D8;
+      --text-muted: #A89F93;
+      --paper-white: #24201A;
+      --envelope-color: #2A241E;
+      --warm-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+      --gold-glow: rgba(197, 160, 89, 0.25);
+      --ui-glass: rgba(32, 28, 23, 0.92);
+      --ui-border: rgba(197, 160, 89, 0.22);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background: var(--bg-cream);
+      background-image: var(--bg-gradient);
+      color: var(--text-dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+      overflow-y: auto; /* Memungkinkan scrolling ke bawah */
+      position: relative;
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+
+    /* Canvas Debu Emas */
+    #particles-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Top Bar Navigasi Bersih Tanpa Emoji */
+    .top-bar {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--ui-glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--ui-border);
+      padding: 6px 14px;
+      border-radius: 999px;
+      z-index: 50;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .brand-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.76rem;
+      letter-spacing: 0.14em;
+      font-weight: 700;
+      color: var(--gold-dark);
+      padding-right: 6px;
+      border-right: 1px solid var(--ui-border);
+    }
+
+    .btn-top-control {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      padding: 6px 10px;
+      border-radius: 20px;
+      transition: all 0.2s ease;
+      background: rgba(197, 160, 89, 0.08);
+    }
+
+    .btn-top-control:hover {
+      background: rgba(197, 160, 89, 0.2);
+    }
+
+    .btn-top-control svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* Main Area Viewport */
+    .main-viewport {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 70px 16px 20px;
+    }
+
+    /* Arena Stage */
+    .stage-arena {
+      position: relative;
+      width: 100%;
+      max-width: 580px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 520px;
+    }
+
+    /* Target Envelope Wrapper */
+    .target-wrapper {
+      position: relative;
+      width: 290px;
+      height: 195px;
+      perspective: 1000px;
+      margin-top: 25px;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .target-wrapper.locked {
+      filter: drop-shadow(0 0 16px rgba(197, 160, 89, 0.65));
+      transform: scale(1.03);
+    }
+
+    .target-wrapper.hit {
+      animation: impactQuake 0.45s ease-out;
+    }
+
+    @keyframes impactQuake {
+      0% { transform: scale(1) translateY(0); }
+      20% { transform: scale(1.06) translateY(-8px) rotate(-2deg); }
+      40% { transform: scale(0.96) translateY(5px) rotate(2deg); }
+      60% { transform: scale(1.02) translateY(-3px) rotate(-1deg); }
+      100% { transform: scale(1) translateY(0); }
+    }
+
+    /* Reticle / Sasaran Bidik Emas */
+    .target-reticle {
+      position: absolute;
+      inset: -14px;
+      border: 1.5px dashed var(--gold-primary);
+      border-radius: 18px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: scale(1.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .target-wrapper.locked .target-reticle {
+      opacity: 0.9;
+      transform: scale(1);
+      animation: reticleSpin 12s linear infinite;
+    }
+
+    @keyframes reticleSpin {
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Envelope Box Structure */
+    .envelope-box {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: var(--envelope-color);
+      border-radius: 12px;
+      box-shadow: var(--envelope-shadow);
+      border: 1px solid rgba(197, 160, 89, 0.45);
+      transform-style: preserve-3d;
+      transition: all 0.4s ease;
+    }
+
+    .envelope-box::before {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border: 1px dashed rgba(197, 160, 89, 0.4);
+      border-radius: 8px;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .env-fold-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 0;
+      border-bottom: 110px solid #EFEAE0;
+      border-left: 145px solid transparent;
+      border-right: 145px solid transparent;
+      z-index: 6;
+      border-radius: 0 0 12px 12px;
+    }
+
+    body.soothing-mode .env-fold-bottom {
+      border-bottom-color: #24201A;
+    }
+
+    .env-fold-left {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      border-left: 145px solid #F4EFE5;
+      border-top: 100px solid transparent;
+      border-bottom: 95px solid transparent;
+      z-index: 7;
+      border-radius: 12px 0 0 12px;
+    }
+
+    body.soothing-mode .env-fold-left {
+      border-left-color: #27221C;
+    }
+
+    .env-fold-right {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 0;
+      border-right: 145px solid #F1EBE0;
+      border-top: 100px solid transparent;
+      border-bottom: 95px solid transparent;
+      z-index: 7;
+      border-radius: 0 12px 12px 0;
+    }
+
+    body.soothing-mode .env-fold-right {
+      border-right-color: #28231D;
+    }
+
+    .env-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 0;
+      border-top: 115px solid #EAE3D6;
+      border-left: 145px solid transparent;
+      border-right: 145px solid transparent;
+      transform-origin: top center;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s 0.2s;
+      z-index: 8;
+      border-radius: 12px 12px 0 0;
+    }
+
+    body.soothing-mode .env-flap {
+      border-top-color: #2C2620;
+    }
+
+    .envelope-box.opened .env-flap {
+      transform: rotateX(180deg);
+      z-index: 2;
+    }
+
+    /* Wax Seal Crest */
+    .wax-seal {
+      position: absolute;
+      top: 98px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 44px;
+      height: 44px;
+      background: radial-gradient(circle, #ECC371 0%, #BA8933 65%, #875F1B 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFF9E6;
+      box-shadow: 0 4px 14px rgba(135, 95, 27, 0.45), inset 0 2px 4px rgba(255,255,255,0.45);
+      z-index: 9;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .wax-seal svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+    }
+
+    .envelope-box.opened .wax-seal {
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+    }
+
+    /* Peek Sheet */
+    .mini-peek-sheet {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      right: 20px;
+      height: 160px;
+      background: #FFFFFF;
+      border-radius: 8px;
+      border: 1px solid rgba(197, 160, 89, 0.3);
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    body.soothing-mode .mini-peek-sheet {
+      background: #25201A;
+      border-color: rgba(197, 160, 89, 0.3);
+    }
+
+    .envelope-box.opened .mini-peek-sheet {
+      transform: translateY(-80px);
+    }
+
+    /* Impact Sparkle */
+    .impact-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(243, 229, 171, 0.85) 0%, rgba(197, 160, 89, 0.4) 40%, transparent 70%);
+      pointer-events: none;
+      z-index: 20;
+      transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+      opacity: 0;
+    }
+
+    .impact-glow.active {
+      transform: translate(-50%, -50%) scale(1.6);
+      opacity: 1;
+    }
+
+    /* Trajectory Aiming Line (Canvas/SVG) */
+    .aim-trajectory {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 12;
+    }
+
+    /* Interactive Archer Station (Bagian Bawah) */
+    .archer-station {
+      position: relative;
+      width: 220px;
+      height: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 5px;
+      touch-action: none;
+      cursor: grab;
+    }
+
+    .archer-station:active {
+      cursor: grabbing;
+    }
+
+    /* Rotatable Turret / Bow Mount */
+    /* DEFAULT KONDISI AWAL: MENGARAH KE BAWAH (180deg) */
+    .bow-turret {
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-origin: center center;
+      transform: rotate(180deg); /* Menghadap ke bawah sesuai request */
+      transition: transform 0.12s ease-out;
+      pointer-events: none;
+    }
+
+    /* Golden Bow Visual */
+    .bow-svg {
+      width: 140px;
+      height: 75px;
+      filter: drop-shadow(0 4px 10px rgba(197, 160, 89, 0.35));
+    }
+
+    .bow-string-path {
+      transition: all 0.2s cubic-bezier(0.1, 0.9, 0.2, 1);
+    }
+
+    .archer-station.drawn .bow-string-path {
+      d: path("M 15 15 Q 70 60 125 15");
+    }
+
+    /* Golden Arrow */
+    .arrow-shaft {
+      position: absolute;
+      width: 14px;
+      height: 105px;
+      transform-origin: center center;
+      transition: opacity 0.25s ease, transform 0.2s ease;
+      z-index: 14;
+    }
+
+    .archer-station.drawn .arrow-shaft {
+      transform: translateY(18px);
+    }
+
+    /* Status Instruction Capsule */
+    .aim-guidance-pill {
+      position: absolute;
+      bottom: -12px;
+      background: var(--ui-glass);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--ui-border);
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      color: var(--gold-dark);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    .aim-guidance-pill svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* Tombol Reset / Replay Panah */
+    .btn-reset-bottom {
+      margin-top: 15px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--ui-glass);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--ui-border);
+      color: var(--text-dark);
+      padding: 8px 18px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      transition: all 0.25s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .btn-reset-bottom.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .btn-reset-bottom:hover {
+      background: #FFFFFF;
+      transform: translateY(-2px);
+    }
+
+    .btn-reset-bottom svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* Scroll Cue Indicator menuju Scratch Cards */
+    .scroll-cue {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      margin-top: 25px;
+      cursor: pointer;
+      opacity: 0.8;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      color: var(--gold-dark);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .scroll-cue:hover {
+      opacity: 1;
+      transform: translateY(3px);
+    }
+
+    .scroll-cue svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      animation: bounceArrow 2s infinite ease-in-out;
+    }
+
+    @keyframes bounceArrow {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    /* ========================================================
+       SECTION 2: SCRATCH CARDS (KARTU GOSOK INTERAKTIF)
+       ======================================================== */
+    .scratch-section {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 1020px;
+      margin: 40px auto 70px;
+      padding: 30px 20px;
+    }
+
+    .scratch-section-header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .scratch-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.74rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+      padding: 4px 14px;
+      border-radius: 30px;
+      background: rgba(197, 160, 89, 0.1);
+      border: 1px solid rgba(197, 160, 89, 0.25);
+      margin-bottom: 8px;
+    }
+
+    .scratch-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.85rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+    }
+
+    .scratch-subtitle {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* Grid Kartu Gosok */
+    .scratch-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      width: 100%;
+    }
+
+    .scratch-card-item {
+      background: var(--paper-white);
+      border: 1px solid rgba(197, 160, 89, 0.3);
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(110, 85, 35, 0.08);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .scratch-card-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px rgba(197, 160, 89, 0.2);
+    }
+
+    /* Area Display Media & Scratch Canvas */
+    .scratch-stage-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1/1;
+      background: var(--paper-white);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scratch-media {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      background: var(--paper-white);
+    }
+
+    video.scratch-media {
+      object-fit: cover;
+      background: #000000;
+    }
+
+    /* Canvas Gosokan Berlapis Emas */
+    .scratch-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      cursor: crosshair;
+      touch-action: none; /* Mencegah bentrok scroll saat menggosok */
+      transition: opacity 0.6s ease;
+    }
+
+    .scratch-canvas.cleared {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Detail Teks Kartu di Bagian Bawah */
+    .scratch-card-info {
+      padding: 16px 18px;
+      text-align: center;
+      border-top: 1px solid rgba(197, 160, 89, 0.15);
+      background: var(--paper-white);
+    }
+
+    .scratch-card-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--gold-dark);
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+
+    .scratch-card-desc {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ========================================================
+       MODAL 1: POP-UP VIDEO (PIN / BUBU DUDU)
+       DITAMPILKAN SETELAH PANAH MENGENAI SURAT
+       ======================================================== */
+    .video-dialog-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 15, 12, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 120;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.45s ease;
+    }
+
+    .video-dialog-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .video-dialog-card {
+      background: var(--paper-white);
+      border: 1px solid rgba(197, 160, 89, 0.4);
+      border-radius: 20px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+      width: 100%;
+      max-width: 440px;
+      overflow: hidden;
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      text-align: center;
+    }
+
+    .video-dialog-backdrop.active .video-dialog-card {
+      transform: scale(1) translateY(0);
+    }
+
+    .video-dialog-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid rgba(197, 160, 89, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .video-dialog-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.88rem;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      color: var(--gold-dark);
+      text-transform: uppercase;
+    }
+
+    .btn-skip-video {
+      background: rgba(197, 160, 89, 0.1);
+      border: 1px solid rgba(197, 160, 89, 0.25);
+      color: var(--text-dark);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-skip-video:hover {
+      background: rgba(197, 160, 89, 0.25);
+    }
+
+    .video-player-frame {
+      position: relative;
+      width: 100%;
+      height: 320px;
+      background: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-player-frame video, 
+    .video-player-frame img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .video-progress-bar-wrap {
+      width: 100%;
+      height: 4px;
+      background: rgba(197, 160, 89, 0.2);
+    }
+
+    .video-progress-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: var(--gold-metallic);
+      transition: width 0.1s linear;
+    }
+
+    .video-dialog-footer {
+      padding: 12px 20px 16px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* ========================================================
+       MODAL 2: ISI SURAT RESMI LENGKAP
+       MUNCUL OTOMATIS SETELAH VIDEO SELESAI
+       ======================================================== */
+    .letter-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 14, 10, 0.65);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 130;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .letter-modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .letter-card-dialog {
+      background: var(--paper-white);
+      width: 100%;
+      max-width: 600px;
+      max-height: 88vh;
+      overflow-y: auto;
+      border-radius: 20px;
+      border: 1px solid rgba(197, 160, 89, 0.4);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+      position: relative;
+      padding: 38px 32px;
+      transform: translateY(30px) scale(0.95);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .letter-modal-backdrop.active .letter-card-dialog {
+      transform: translateY(0) scale(1);
+    }
+
+    .letter-card-dialog::-webkit-scrollbar {
+      width: 5px;
+    }
+    .letter-card-dialog::-webkit-scrollbar-thumb {
+      background: rgba(197, 160, 89, 0.35);
+      border-radius: 10px;
+    }
+
+    /* Sudut Emas Klasik */
+    .corner-ornament {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border-color: var(--gold-primary);
+      opacity: 0.55;
+      pointer-events: none;
+    }
+    .c-tl { top: 14px; left: 14px; border-top: 2px solid; border-left: 2px solid; }
+    .c-tr { top: 14px; right: 14px; border-top: 2px solid; border-right: 2px solid; }
+    .c-bl { bottom: 14px; left: 14px; border-bottom: 2px solid; border-left: 2px solid; }
+    .c-br { bottom: 14px; right: 14px; border-bottom: 2px solid; border-right: 2px solid; }
+
+    .btn-close-letter {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(197, 160, 89, 0.12);
+      border: 1px solid rgba(197, 160, 89, 0.2);
+      color: var(--text-dark);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 10;
+    }
+
+    .btn-close-letter:hover {
+      background: rgba(197, 160, 89, 0.25);
+    }
+
+    .btn-close-letter svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+    }
+
+    /* Header Surat */
+    .letter-header-group {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .letter-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.74rem;
+      letter-spacing: 0.16em;
+      color: var(--gold-dark);
+      text-transform: uppercase;
+      padding: 3px 12px;
+      border-radius: 20px;
+      background: rgba(197, 160, 89, 0.1);
+      border: 1px solid rgba(197, 160, 89, 0.22);
+      margin-bottom: 10px;
+    }
+
+    .letter-heading {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.95rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      line-height: 1.25;
+      margin-bottom: 4px;
+    }
+
+    .letter-script-sub {
+      font-family: 'Alex Brush', cursive;
+      font-size: 1.7rem;
+      color: var(--gold-primary);
+      display: block;
+    }
+
+    .gold-separator {
+      width: 70px;
+      height: 2px;
+      background: var(--gold-metallic);
+      margin: 12px auto 0;
+      border-radius: 2px;
+    }
+
+    /* Isi Pesan Empatik */
+    .letter-content-text {
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: var(--text-dark);
+      margin-bottom: 24px;
+    }
+
+    .letter-content-text p {
+      margin-bottom: 14px;
+    }
+
+    .highlight-pill {
+      background: rgba(197, 160, 89, 0.16);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      color: var(--gold-dark);
+    }
+
+    /* Care Kit Khusus Flu, Demam & Pusing */
+    .care-kit-panel {
+      background: rgba(197, 160, 89, 0.06);
+      border: 1px solid rgba(197, 160, 89, 0.2);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 24px;
+    }
+
+    .care-kit-header {
+      font-family: 'Cinzel', serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 14px;
+      font-weight: 700;
+    }
+
+    .care-kit-header svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .care-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+    }
+
+    .care-item {
+      background: var(--paper-white);
+      border: 1px solid rgba(197, 160, 89, 0.2);
+      border-radius: 12px;
+      padding: 12px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+    }
+
+    .care-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(197, 160, 89, 0.18);
+      border-color: var(--gold-primary);
+    }
+
+    .care-icon-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(197, 160, 89, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 6px;
+      color: var(--gold-primary);
+    }
+
+    .care-icon-box svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .care-item-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 2px;
+    }
+
+    .care-item-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    /* Animasi Uap Teh */
+    .steam-wave {
+      animation: steamFloat 2.2s infinite ease-out;
+    }
+    @keyframes steamFloat {
+      0% { opacity: 0; transform: translateY(0); }
+      50% { opacity: 0.8; }
+      100% { opacity: 0; transform: translateY(-7px); }
+    }
+
+    /* Latihan Napas Relaksasi (Pereda Sakit Kepala) */
+    .relaxation-guide-box {
+      border: 1px dashed rgba(197, 160, 89, 0.35);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    body.soothing-mode .relaxation-guide-box {
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .breath-pacer {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #F3E5AB 0%, #C5A059 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 14px rgba(197, 160, 89, 0.4);
+      animation: breathCycle 7s infinite ease-in-out;
+      flex-shrink: 0;
+      color: #1A1408;
+    }
+
+    .breath-pacer svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    @keyframes breathCycle {
+      0%, 100% { transform: scale(0.85); box-shadow: 0 0 6px rgba(197, 160, 89, 0.2); }
+      50% { transform: scale(1.15); box-shadow: 0 0 20px rgba(197, 160, 89, 0.55); }
+    }
+
+    .breath-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 2px;
+    }
+
+    .breath-desc {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Footer Energi Kesembuhan */
+    .recovery-energy-footer {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .energy-bar-track {
+      width: 100%;
+      height: 10px;
+      background: rgba(197, 160, 89, 0.15);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 10px 0 14px;
+      border: 1px solid rgba(197, 160, 89, 0.25);
+    }
+
+    .energy-bar-progress {
+      height: 100%;
+      width: 40%;
+      background: var(--gold-metallic);
+      border-radius: 999px;
+      transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .btn-send-blessing {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold-metallic);
+      color: #1A1408;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 10px 24px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(179, 135, 40, 0.3);
+      transition: all 0.25s ease;
+    }
+
+    .btn-send-blessing:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(179, 135, 40, 0.4);
+    }
+
+    .btn-send-blessing svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: currentColor;
+    }
+
+    /* Partikel Hati & Bintang Emas Melayang (SVG Murni) */
+    .floating-blessing-svg {
+      position: fixed;
+      pointer-events: none;
+      width: 22px;
+      height: 22px;
+      color: #C5A059;
+      animation: floatUpAnim 1.6s ease-out forwards;
+      z-index: 200;
+    }
+
+    @keyframes floatUpAnim {
+      0% { opacity: 1; transform: translate(0, 0) scale(0.6); }
+      50% { opacity: 0.9; transform: translate(var(--dx), -70px) scale(1.1); }
+      100% { opacity: 0; transform: translate(var(--dx), -150px) scale(0.7); }
+    }
+
+    /* Responsive Tuning */
+    @media (max-width: 860px) {
+      .scratch-cards-grid {
+        grid-template-columns: 1fr;
+        max-width: 340px;
+        margin: 0 auto;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .stage-arena {
+        min-height: 480px;
+      }
+      .target-wrapper {
+        width: 260px;
+        height: 175px;
+        margin-top: 15px;
+      }
+      .env-fold-bottom {
+        border-bottom-width: 95px;
+        border-left-width: 130px;
+        border-right-width: 130px;
+      }
+      .env-fold-left, .env-fold-right {
+        border-left-width: 130px;
+        border-right-width: 130px;
+        border-top-width: 88px;
+        border-bottom-width: 88px;
+      }
+      .env-flap {
+        border-top-width: 100px;
+        border-left-width: 130px;
+        border-right-width: 130px;
+      }
+      .wax-seal {
+        top: 86px;
+      }
+      .letter-card-dialog {
+        padding: 30px 18px;
+      }
+      .letter-heading {
+        font-size: 1.55rem;
+      }
+      .care-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Particle Canvas (Kilau Emas Bersih) -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Top Bar: Navigasi Minimalis Modern Bebas Emoji -->
+  <header class="top-bar">
+    <div class="brand-pill">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+      </svg>
+      <span>LEKAS PULIH</span>
+    </div>
+
+    <!-- Toggle Nada Menenangkan -->
+    <button class="btn-top-control" id="btn-toggle-sound" title="Putar Nada Musik Menenangkan">
+      <svg id="icon-sound" viewBox="0 0 24 24">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+      </svg>
+      <span id="label-sound">Musik</span>
+    </button>
+
+    <!-- Toggle Mode Redup Mata (Eye-Comfort) -->
+    <button class="btn-top-control" id="btn-toggle-dim" title="Mode Redup Mata (Pereda Silau)">
+      <svg id="icon-dim" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+      <span id="label-dim">Redup</span>
+    </button>
+  </header>
+
+  <!-- Main Viewport Interactive Arena (Atas: Panah & Amplop) -->
+  <main class="main-viewport" id="interaction-arena">
+    
+    <div class="stage-arena">
+
+      <!-- Target Envelope (Di Bagian Tengah Atas) -->
+      <div class="target-wrapper" id="target-envelope">
+        
+        <!-- Reticle Bidikan Emas -->
+        <div class="target-reticle">
+          <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" stroke="#C5A059" stroke-width="1.2">
+            <circle cx="50" cy="50" r="46" stroke-dasharray="6 4"/>
+            <line x1="50" y1="2" x2="50" y2="14"/>
+            <line x1="50" y1="86" x2="50" y2="98"/>
+            <line x1="2" y1="50" x2="14" y2="50"/>
+            <line x1="86" y1="50" x2="98" y2="50"/>
+          </svg>
+        </div>
+
+        <div class="envelope-box" id="envelope-box">
+          <!-- Mini Preview Surat -->
+          <div class="mini-peek-sheet">
+            <div style="font-family:'Alex Brush', cursive; font-size: 1.45rem; color: #C5A059; margin-top: 10px;">Cepat sembuh ya...</div>
+          </div>
+
+          <!-- Lipatan Origami Amplop -->
+          <div class="env-fold-left"></div>
+          <div class="env-fold-right"></div>
+          <div class="env-fold-bottom"></div>
+          <div class="env-flap"></div>
+          
+          <!-- Segel Emas (Clean Vector Crest) -->
+          <div class="wax-seal" title="Segel Harapan">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </div>
+
+          <!-- Efek Ledakan Kilau Benturan -->
+          <div class="impact-glow" id="impact-glow"></div>
+        </div>
+      </div>
+
+      <!-- Garis Trajektori Bidikan -->
+      <svg class="aim-trajectory" id="trajectory-svg">
+        <line id="trajectory-line" x1="0" y1="0" x2="0" y2="0" stroke="rgba(197, 160, 89, 0.45)" stroke-width="2" stroke-dasharray="4 6" opacity="0"/>
+      </svg>
+
+      <!-- Archer Station (Bagian Bawah: Arah Awal ke Bawah 180°, Interaktif Kursor/Touch) -->
+      <div class="archer-station" id="archer-station">
+        
+        <!-- Turret yang Berputar Sesuai Sentuhan/Kursor -->
+        <div class="bow-turret" id="bow-turret">
+          
+          <!-- Arrow Shaft (Anak Panah Emas) -->
+          <div class="arrow-shaft" id="arrow-shaft">
+            <svg viewBox="0 0 24 160" width="14" height="105" style="overflow: visible;">
+              <defs>
+                <linearGradient id="arrowGold" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#FCF6BA"/>
+                  <stop offset="50%" stop-color="#C5A059"/>
+                  <stop offset="100%" stop-color="#8E6F34"/>
+                </linearGradient>
+              </defs>
+              <polygon points="12,0 3,22 12,17 21,22" fill="url(#arrowGold)"/>
+              <rect x="11" y="16" width="2" height="126" fill="url(#arrowGold)"/>
+              <path d="M 11 120 L 3 138 L 11 133 Z" fill="#C5A059"/>
+              <path d="M 13 120 L 21 138 L 13 133 Z" fill="#C5A059"/>
+              <path d="M 11 132 L 4 148 L 11 144 Z" fill="#E5C158"/>
+              <path d="M 13 132 L 20 148 L 13 144 Z" fill="#E5C158"/>
+            </svg>
+          </div>
+
+          <!-- Busur Emas (Bow Graphic) -->
+          <svg class="bow-svg" viewBox="0 0 140 75">
+            <defs>
+              <linearGradient id="bowGoldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#8E6F34"/>
+                <stop offset="25%" stop-color="#FCF6BA"/>
+                <stop offset="50%" stop-color="#C5A059"/>
+                <stop offset="75%" stop-color="#FCF6BA"/>
+                <stop offset="100%" stop-color="#8E6F34"/>
+              </linearGradient>
+            </defs>
+            <path d="M 15 15 Q 70 -2 125 15" fill="none" stroke="url(#bowGoldGrad)" stroke-width="4.2" stroke-linecap="round"/>
+            <circle cx="15" cy="15" r="3" fill="#C5A059"/>
+            <circle cx="125" cy="15" r="3" fill="#C5A059"/>
+            <!-- Tali Busur -->
+            <path class="bow-string-path" id="bow-string-path" d="M 15 15 Q 70 15 125 15" fill="none" stroke="#EFE4CF" stroke-width="1.8"/>
+          </svg>
+
+        </div>
+
+        <!-- Panduan Arah & Instruksi -->
+        <div class="aim-guidance-pill" id="aim-guidance-pill">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <span id="guidance-text">Arahkan panah ke surat di atas</span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Tombol Reset / Bidik Lagi -->
+    <button class="btn-reset-bottom" id="btn-reset-bottom">
+      <svg viewBox="0 0 24 24">
+        <path d="M23 4v6h-6"></path>
+        <path d="M1 20v-6h6"></path>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+      </svg>
+      <span>Coba Lagi</span>
+    </button>
+
+  </main>
+
+  <!-- ========================================================
+       SECTION 2: SCRATCH CARDS (KARTU GOSOK DARI ZZ/E)
+       3 KARTU GOSOK DENGAN TAMPILAN MEWAH EMAS & PUTIH
+       ======================================================== -->
+  <section class="scratch-section" id="scratch-section">
+    
+    <header class="scratch-section-header">
+      <h2 class="scratch-title">Things I Wish I Can Do To You Right Now</h2>
+      <p class="scratch-subtitle">Gosok lapisan emas pada kartu di bawah ini untuk melihat pesan dan animasi ya kaaa.</p>
+    </header>
+
+    <div class="scratch-cards-grid">
+      
+      <!-- Card 1: Pijat Lembut Pereda Pusing (Pinterest Massage Couple) -->
+      <div class="scratch-card-item" id="card-wrap-1">
+        <div class="scratch-stage-box">
+          <img class="scratch-media" src="card2.gif" alt="Pijat Lembut">
+          <canvas class="scratch-canvas" data-title="" data-subtitle=""></canvas>
+        </div>
+        <div class="scratch-card-info">
+          <h3 class="scratch-card-title">Suapin Sesuatu </h3>
+          <p class="scratch-card-desc">Aku pengen banget nyuapin kamuuu, huhu pas sakit pasti lemes banget kann, nah bisa deh pakai tenaga aku dulu buat bantu makanan atau minumannya masuk ke mulut kamuu.</p>
+        </div>
+      </div>
+
+      <!-- Card 2: Peluk Hangat & Kasih Sayang (Bubu Dudu Hug / Care) -->
+      <div class="scratch-card-item" id="card-wrap-2">
+        <div class="scratch-stage-box">
+          <img class="scratch-media" src="card1.gif" alt="Pelukan & Doa">
+          <canvas class="scratch-canvas" data-title="" data-subtitle=""></canvas>
+        </div>
+        <div class="scratch-card-info">
+          <h3 class="scratch-card-title">Pijitin Kamu</h3>
+          <p class="scratch-card-desc">Aku bukan ahlinya sii, Cuma bisa kayanya buat beberapa part badan kaa (karena aku juga sering disuruh pijitin ortu aku) ada la pengelaman dikit dikit hehe.</p>
+        </div>
+      </div>
+
+      <!-- Card 3: Video Card 3 dari User (card3.mp4) -->
+      <div class="scratch-card-item" id="card-wrap-3">
+        <div class="scratch-stage-box">
+          <video class="scratch-media" src="card3.mp4" autoplay loop muted playsinline></video>
+          <canvas class="scratch-canvas" data-title="" data-subtitle=""></canvas>
+        </div>
+        <div class="scratch-card-info">
+          <h3 class="scratch-card-title">Support System</h3>
+          <p class="scratch-card-desc">Aku pengen banget ngelakuin semuaaa, semua yang bisa bikin kamu feel better saat sakit aku pengen kasih service ituuuu, huhu sayangka kita jauhh.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ========================================================
+       MODAL 1: POP-UP VIDEO (PIN / BUBU DUDU)
+       DITAMPILKAN SETELAH PANAH MENGENAI SURAT
+       ======================================================== -->
+  <div class="video-dialog-backdrop" id="video-popup-modal">
+    <div class="video-dialog-card" role="dialog" aria-modal="true">
+      
+      <div class="video-dialog-header">
+        <span class="video-dialog-title">Kondisi Aku Saat Tau Kamu Sedang Sakit</span>
+        <button class="btn-skip-video" id="btn-skip-video">Buka Surat</button>
+      </div>
+
+      <div class="video-player-frame">
+        <video id="pin-video-player" src="pin_media.gif" autoplay playsinline muted loop="false"></video>
+      </div>
+
+      <div class="video-progress-bar-wrap">
+        <div class="video-progress-bar-fill" id="video-progress-fill"></div>
+      </div>
+
+      <div class="video-dialog-footer">
+        <span>Menyiapkan pesan pemulihan...</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL 2: ISI SURAT RESMI LENGKAP
+       MUNCUL OTOMATIS SETELAH VIDEO SELESAI
+       ======================================================== -->
+  <div class="letter-modal-backdrop" id="letter-modal-backdrop">
+    <div class="letter-card-dialog" role="dialog" aria-modal="true">
+      
+      <!-- Empat Ornamen Sudut Emas -->
+      <div class="corner-ornament c-tl"></div>
+      <div class="corner-ornament c-tr"></div>
+      <div class="corner-ornament c-bl"></div>
+      <div class="corner-ornament c-br"></div>
+
+      <!-- Tombol Tutup -->
+      <button class="btn-close-letter" id="btn-close-letter" aria-label="Tutup Surat">
+        <svg viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Header Surat -->
+      <header class="letter-header-group">
+        <div class="letter-tag">Doa Untukmu</div>
+        <h1 class="letter-heading">Lekas Pulih Sepenuhnya</h1>
+        <span class="letter-script-sub">Wishing U a Speedy Recovery Kaa</span>
+        <div class="gold-separator"></div>
+      </header>
+
+      <!-- Pesan Empatik -->
+      <section class="letter-content-text">
+        <p>
+          Hai kakaaa... Aku tahu hari ini terasa berat saat tubuh sedang <span class="highlight-pill">flu, meriang, dan kepalanya berdenyut pusing</span>. Rasanya pasti ga enak banget kan ya huhuuu.
+        </p>
+        <p>
+          Tolong utamain dulu recovery kamu, jangan dulu pikirin buat produktif, atau kegiatan berat lainnya. <strong>Hari ini hakmu sepenuhnya buat beristirahat ya kaaaaa.</strong> Istirahat semaksimal mungkin biar energi kamu kembali pulih perlahan.
+        </p>
+      </section>
+
+      <!-- Resep Hangat Khusus Flu, Demam & Pusing -->
+      <section class="care-kit-panel">
+        <div class="care-kit-header">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+          </svg>
+          <span>Beberapa hal yang aku kira bisa meredakan kondisi kamuu</span>
+        </div>
+
+        <div class="care-grid">
+          <!-- Item 1: Teh Jahe Hangat -->
+          <div class="care-item" id="item-tea" title="Hirup uap hangat teh jahe">
+            <div class="care-icon-box">
+              <svg viewBox="0 0 24 24">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                <line class="steam-wave" x1="6" y1="2" x2="6" y2="4"></line>
+                <line class="steam-wave" x1="10" y1="1" x2="10" y2="4"></line>
+                <line class="steam-wave" x1="14" y1="2" x2="14" y2="4"></line>
+              </svg>
+            </div>
+            <div class="care-item-name">Teh Jahe Hangat</div>
+            <div class="care-item-sub">Legakan napas & tenggorokan</div>
+          </div>
+
+          <!-- Item 2: Kompres Lembut -->
+          <div class="care-item" id="item-compress" title="Redakan demam dan pusing dahi">
+            <div class="care-icon-box">
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="5" width="18" height="14" rx="3"></rect>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+              </svg>
+            </div>
+            <div class="care-item-name">Kompres Lembut</div>
+            <div class="care-item-sub">Redakan panas & pusing kepala</div>
+          </div>
+
+          <!-- Item 3: Selimut Hangat -->
+          <div class="care-item" id="item-blanket" title="Jaga suhu tubuh tetap hangat">
+            <div class="care-icon-box">
+              <svg viewBox="0 0 24 24">
+                <path d="M2 4v16"></path>
+                <path d="M2 8h18a2 2 0 0 1 2 2v10"></path>
+                <path d="M2 17h20"></path>
+                <path d="M6 8v9"></path>
+              </svg>
+            </div>
+            <div class="care-item-name">Selimut Tebal</div>
+            <div class="care-item-sub">Hangatkan tubuh meriang</div>
+          </div>
+
+          <!-- Item 4: Air Putih Hangat -->
+          <div class="care-item" id="item-water" title="Jaga hidrasi cairan tubuh">
+            <div class="care-icon-box">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+              </svg>
+            </div>
+            <div class="care-item-name">Air Putih Hangat</div>
+            <div class="care-item-sub">Bantu netralisir demam</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panduan Relaksasi Napas (Pereda Sakit Kepala) -->
+      <div class="relaxation-guide-box">
+        <div class="breath-pacer">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 2a10 10 0 0 1 10 10"></path>
+            <path d="M12 22a10 10 0 0 1-10-10"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="breath-title">Meditasi Ringan</div>
+          <div class="breath-desc">
+          </div>
+        </div>
+      </div>
+
+      <!-- Meteran Energi & Kirim Doa -->
+      <footer class="recovery-energy-footer">
+        <div style="font-size: 0.82rem; color: var(--text-muted);">
+          Tingkat Energi U Saat Ini: <strong id="energy-metric-text" style="color: var(--gold-dark);">40%</strong>
+        </div>
+        <div class="energy-bar-track">
+          <div class="energy-bar-progress" id="energy-bar-progress"></div>
+        </div>
+        <button class="btn-send-blessing" id="btn-send-blessing">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+          <span>Klik biar nambah</span>
+        </button>
+      </footer>
+
+    </div>
+  </div>
+
+  <!-- Audio Synthesizer (Pure Web Audio API) -->
+  <script>
+    class GentleSoundSynth {
+      constructor() {
+        this.ctx = null;
+        this.isAudioEnabled = true;
+        this.melodyInterval = null;
+        this.bgMusic = null;
+        try {
+          this.bgMusic = new Audio('Sunbeam.mp3');
+          this.bgMusic.loop = true;
+          this.bgMusic.volume = 0.65;
+        } catch (e) {
+          console.log('Audio init fallback');
+        }
+      }
+
+      initContext() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioContext();
+        }
+        if (this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      playLockOn() {
+        if (!this.isAudioEnabled) return;
+        this.initContext();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(659.25, this.ctx.currentTime);
+        gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.18);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.18);
+      }
+
+      playBowSnap() {
+        if (!this.isAudioEnabled) return;
+        this.initContext();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(280, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(80, this.ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.15);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.15);
+      }
+
+      playArrowWhoosh() {
+        if (!this.isAudioEnabled) return;
+        this.initContext();
+        const bufferSize = this.ctx.sampleRate * 0.35;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
+
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = buffer;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(700, this.ctx.currentTime);
+        filter.frequency.exponentialRampToValueAtTime(2600, this.ctx.currentTime + 0.25);
+        filter.Q.value = 3.5;
+
+        const gain = this.ctx.createGain();
+        gain.gain.setValueAtTime(0.01, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.15, this.ctx.currentTime + 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.35);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        noise.start();
+        noise.stop(this.ctx.currentTime + 0.35);
+      }
+
+      playChimeImpact() {
+        if (!this.isAudioEnabled) return;
+        this.initContext();
+        const freqs = [523.25, 659.25, 783.99, 1046.50];
+        freqs.forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime + idx * 0.035);
+          gain.gain.setValueAtTime(0.08, this.ctx.currentTime + idx * 0.035);
+          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + idx * 0.035 + 1.2);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(this.ctx.currentTime + idx * 0.035);
+          osc.stop(this.ctx.currentTime + idx * 0.035 + 1.2);
+        });
+      }
+
+      playPaperUnfurl() {
+        if (!this.isAudioEnabled) return;
+        this.initContext();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(320, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(560, this.ctx.currentTime + 0.45);
+        gain.gain.setValueAtTime(0.01, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.07, this.ctx.currentTime + 0.2);
+        gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.45);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.45);
+      }
+
+      playHarmonicWarmth() {
+        if (!this.isAudioEnabled) return;
+        this.initContext();
+        const notes = [440, 554.37, 659.25, 880];
+        notes.forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime + idx * 0.07);
+          gain.gain.setValueAtTime(0.06, this.ctx.currentTime + idx * 0.07);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + idx * 0.07 + 0.9);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(this.ctx.currentTime + idx * 0.07);
+          osc.stop(this.ctx.currentTime + idx * 0.07 + 0.9);
+        });
+      }
+
+      startAmbientLofi() {
+        if (this.bgMusic) {
+          const promise = this.bgMusic.play();
+          if (promise !== undefined) {
+            promise.catch(() => {
+              this.startSynthLofi();
+            });
+            return;
+          }
+        }
+        this.startSynthLofi();
+      }
+
+      stopAmbient() {
+        if (this.bgMusic) {
+          this.bgMusic.pause();
+        }
+        if (this.melodyInterval) {
+          clearInterval(this.melodyInterval);
+          this.melodyInterval = null;
+        }
+      }
+
+      startSynthLofi() {
+        if (this.melodyInterval) return;
+        const notes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25];
+        this.melodyInterval = setInterval(() => {
+          if (!this.isAudioEnabled) return;
+          this.initContext();
+          const note = notes[Math.floor(Math.random() * notes.length)];
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(note, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.02, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 2.4);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 2.4);
+        }, 2200);
+      }
+    }
+
+    const soundSystem = new GentleSoundSynth();
+
+    // ========================================================
+    // CANVAS PARTIKEL DEBU EMAS
+    // ========================================================
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class GoldDust {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2.0 + 0.6;
+        this.speedY = Math.random() * -0.45 - 0.15;
+        this.speedX = (Math.random() - 0.5) * 0.25;
+        this.alpha = Math.random() * 0.5 + 0.2;
+        this.decay = Math.random() * 0.0025 + 0.001;
+      }
+      update() {
+        this.y += this.speedY;
+        this.x += this.speedX;
+        this.alpha -= this.decay;
+        if (this.y < 0 || this.alpha <= 0) {
+          this.reset();
+          this.y = canvas.height + 10;
+        }
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(197, 160, 89, ${this.alpha})`;
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < 40; i++) {
+      particles.push(new GoldDust());
+    }
+
+    function renderParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(renderParticles);
+    }
+    renderParticles();
+
+    // ========================================================
+    // INTERAKSI PANAH: MENGARAH KE BAWAH SECARA DEFAULT
+    // & MEMBIDIK DENGAN KURSOR/TOUCH
+    // ========================================================
+    const archerStation = document.getElementById('archer-station');
+    const bowTurret = document.getElementById('bow-turret');
+    const arrowShaft = document.getElementById('arrow-shaft');
+    const targetEnvelope = document.getElementById('target-envelope');
+    const envelopeBox = document.getElementById('envelope-box');
+    const impactGlow = document.getElementById('impact-glow');
+    const trajectoryLine = document.getElementById('trajectory-line');
+    const guidanceText = document.getElementById('guidance-text');
+    const btnResetBottom = document.getElementById('btn-reset-bottom');
+
+    const videoPopupModal = document.getElementById('video-popup-modal');
+    const pinVideoPlayer = document.getElementById('pin-video-player');
+    const videoProgressFill = document.getElementById('video-progress-fill');
+    const btnSkipVideo = document.getElementById('btn-skip-video');
+    
+    const letterModalBackdrop = document.getElementById('letter-modal-backdrop');
+    const btnCloseLetter = document.getElementById('btn-close-letter');
+
+    let currentAngle = 180; // Default awal: Menghadap ke bawah
+    let isAimingLocked = false;
+    let isFired = false;
+    let lastLockSoundTime = 0;
+
+    function getStationCenter() {
+      const rect = archerStation.getBoundingClientRect();
+      return {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      };
+    }
+
+    function getEnvelopeCenter() {
+      const rect = targetEnvelope.getBoundingClientRect();
+      return {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2,
+        left: rect.left,
+        right: rect.right,
+        top: rect.top,
+        bottom: rect.bottom
+      };
+    }
+
+    function handleAim(pointerX, pointerY) {
+      if (isFired) return;
+
+      const station = getStationCenter();
+      const env = getEnvelopeCenter();
+
+      const dx = pointerX - station.x;
+      const dy = pointerY - station.y;
+      
+      let deg = (Math.atan2(dy, dx) * 180 / Math.PI) + 90;
+      currentAngle = deg;
+      bowTurret.style.transform = `rotate(${currentAngle}deg)`;
+
+      const isOverEnvelope = (
+        pointerX >= env.left - 20 &&
+        pointerX <= env.right + 20 &&
+        pointerY >= env.top - 20 &&
+        pointerY <= env.bottom + 40
+      );
+
+      const idealDx = env.x - station.x;
+      const idealDy = env.y - station.y;
+      const idealAngle = (Math.atan2(idealDy, idealDx) * 180 / Math.PI) + 90;
+      const angleDiff = Math.abs(currentAngle - idealAngle);
+
+      if (isOverEnvelope || angleDiff < 14) {
+        if (!isAimingLocked) {
+          isAimingLocked = true;
+          targetEnvelope.classList.add('locked');
+          guidanceText.textContent = 'Sasaran Terkunci — Lepaskan / Klik untuk Menembak!';
+          
+          const now = Date.now();
+          if (now - lastLockSoundTime > 300) {
+            soundSystem.playLockOn();
+            lastLockSoundTime = now;
+          }
+        }
+        trajectoryLine.setAttribute('x1', station.x);
+        trajectoryLine.setAttribute('y1', station.y);
+        trajectoryLine.setAttribute('x2', env.x);
+        trajectoryLine.setAttribute('y2', env.y);
+        trajectoryLine.setAttribute('opacity', '0.85');
+      } else {
+        if (isAimingLocked) {
+          isAimingLocked = false;
+          targetEnvelope.classList.remove('locked');
+          guidanceText.textContent = 'Arahkan panah ke surat di atas';
+        }
+        trajectoryLine.setAttribute('opacity', '0');
+      }
+    }
+
+    window.addEventListener('pointermove', (e) => {
+      // Hanya gerakkan panah jika kursor berada di paruh atas layar (area arena panah)
+      if (e.clientY < window.innerHeight * 0.95 && window.scrollY < 300) {
+        handleAim(e.clientX, e.clientY);
+      }
+    });
+
+    function fireArrow() {
+      if (isFired) return;
+      isFired = true;
+      targetEnvelope.classList.remove('locked');
+      trajectoryLine.setAttribute('opacity', '0');
+
+      const station = getStationCenter();
+      const env = getEnvelopeCenter();
+
+      const idealDx = env.x - station.x;
+      const idealDy = env.y - station.y;
+      const finalAngle = (Math.atan2(idealDy, idealDx) * 180 / Math.PI) + 90;
+      bowTurret.style.transform = `rotate(${finalAngle}deg)`;
+
+      archerStation.classList.add('drawn');
+      guidanceText.textContent = 'Meluncurkan panah emas...';
+
+      setTimeout(() => {
+        archerStation.classList.remove('drawn');
+        soundSystem.playBowSnap();
+        soundSystem.playArrowWhoosh();
+
+        const dist = Math.hypot(idealDx, idealDy) - 30;
+        arrowShaft.style.transition = 'transform 0.38s cubic-bezier(0.2, 0.8, 0.25, 1)';
+        arrowShaft.style.transform = `translateY(-${dist}px)`;
+
+        setTimeout(() => {
+          targetEnvelope.classList.add('hit');
+          impactGlow.classList.add('active');
+          soundSystem.playChimeImpact();
+          guidanceText.textContent = 'Mengenai sasaran!';
+
+          arrowShaft.style.opacity = '0';
+
+          setTimeout(() => {
+            triggerVideoPopup();
+          }, 450);
+
+        }, 360);
+
+      }, 140);
+    }
+
+    window.addEventListener('pointerup', () => {
+      if (!isFired && isAimingLocked) {
+        fireArrow();
+      }
+    });
+
+    targetEnvelope.addEventListener('click', () => {
+      if (!isFired) {
+        fireArrow();
+      }
+    });
+
+    // ========================================================
+    // ALUR POPUP VIDEO PIN & TRANSISI SURAT
+    // ========================================================
+    let videoTimer = null;
+    let videoProgressInterval = null;
+
+    function triggerVideoPopup() {
+      videoPopupModal.classList.add('active');
+      pinVideoPlayer.currentTime = 0;
+      const playPromise = pinVideoPlayer.play();
+      
+      let durationMs = 4500;
+
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          if (pinVideoPlayer.duration && !isNaN(pinVideoPlayer.duration)) {
+            durationMs = pinVideoPlayer.duration * 1000;
+          }
+        }).catch(() => {
+          pinVideoPlayer.poster = 'pin_media.gif';
+        });
+      }
+
+      const startTime = Date.now();
+      videoProgressFill.style.width = '0%';
+      
+      if (videoProgressInterval) clearInterval(videoProgressInterval);
+      videoProgressInterval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const pct = Math.min(100, (elapsed / durationMs) * 100);
+        videoProgressFill.style.width = pct + '%';
+        if (pct >= 100) {
+          clearInterval(videoProgressInterval);
+        }
+      }, 50);
+
+      pinVideoPlayer.onended = () => { finishVideoAndOpenLetter(); };
+
+      if (videoTimer) clearTimeout(videoTimer);
+      videoTimer = setTimeout(() => {
+        finishVideoAndOpenLetter();
+      }, durationMs + 200);
+    }
+
+    function finishVideoAndOpenLetter() {
+      if (!videoPopupModal.classList.contains('active')) return;
+      if (videoTimer) clearTimeout(videoTimer);
+      if (videoProgressInterval) clearInterval(videoProgressInterval);
+
+      videoPopupModal.classList.remove('active');
+      pinVideoPlayer.pause();
+
+      envelopeBox.classList.add('opened');
+      soundSystem.playPaperUnfurl();
+
+      setTimeout(() => {
+        letterModalBackdrop.classList.add('active');
+        btnResetBottom.classList.add('show');
+        document.getElementById('aim-guidance-pill').style.opacity = '0';
+      }, 700);
+    }
+
+    btnSkipVideo.addEventListener('click', () => { finishVideoAndOpenLetter(); });
+    btnCloseLetter.addEventListener('click', () => { letterModalBackdrop.classList.remove('active'); });
+
+    letterModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === letterModalBackdrop) {
+        letterModalBackdrop.classList.remove('active');
+      }
+    });
+
+    // Reset Experience
+    function resetExperience() {
+      letterModalBackdrop.classList.remove('active');
+      videoPopupModal.classList.remove('active');
+      btnResetBottom.classList.remove('show');
+
+      // Musik selalu menyala ketika di-reset
+      userManuallyStopped = false;
+      soundSystem.isAudioEnabled = true;
+      soundSystem.initContext();
+      soundSystem.startAmbientLofi();
+      updateSoundUI(true);
+
+      setTimeout(() => {
+        envelopeBox.classList.remove('opened');
+        targetEnvelope.classList.remove('hit');
+        targetEnvelope.classList.remove('locked');
+        impactGlow.classList.remove('active');
+        trajectoryLine.setAttribute('opacity', '0');
+
+        arrowShaft.style.transition = 'none';
+        arrowShaft.style.transform = 'translateY(0)';
+        arrowShaft.style.opacity = '1';
+
+        currentAngle = 180;
+        bowTurret.style.transform = 'rotate(180deg)';
+
+        isFired = false;
+        isAimingLocked = false;
+        document.getElementById('aim-guidance-pill').style.opacity = '1';
+        guidanceText.textContent = 'Arahkan panah ke surat di atas';
+      }, 300);
+    }
+
+    btnResetBottom.addEventListener('click', resetExperience);
+
+    // ========================================================
+    // ENGINE KARTU GOSOK INTERAKTIF (SCRATCH CARD SYSTEM)
+    // ADAPTASI DARI C:\xampp\htdocs\zz\e DENGAN PALET EMAS MEWAH
+    // ========================================================
+    function initScratchPads() {
+      const scratchCanvases = document.querySelectorAll('.scratch-canvas');
+
+      scratchCanvases.forEach(canvas => {
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        const cardItem = canvas.closest('.scratch-card-item');
+        const titleText = canvas.getAttribute('data-title') || ' ';
+        const subText = canvas.getAttribute('data-subtitle') || '';
+
+        let isDrawing = false;
+        let isCleared = false;
+        let scratchCheckCounter = 0;
+
+        const updateSize = () => {
+          if (isCleared) return;
+          const rect = canvas.getBoundingClientRect();
+          canvas.width = rect.width || 320;
+          canvas.height = rect.height || 400;
+          drawFoilCover();
+        };
+
+        const drawFoilCover = () => {
+          ctx.globalCompositeOperation = 'source-over';
+          
+          // Gradasi Emas Metalik Elegan
+          const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+          grad.addColorStop(0, '#C5A059');
+          grad.addColorStop(0.2, '#FCF6BA');
+          grad.addColorStop(0.5, '#AA771C');
+          grad.addColorStop(0.8, '#F3E5AB');
+          grad.addColorStop(1, '#8E6F34');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          // Pola Tekstur Serbuk Emas Halus
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+          for (let i = 0; i < 700; i++) {
+            ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 1.5, 1.5);
+          }
+          ctx.fillStyle = 'rgba(70, 48, 15, 0.14)';
+          for (let i = 0; i < 500; i++) {
+            ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 2, 2);
+          }
+
+          // Bingkai Kotak Tipis di Lapisan Gosok
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+          ctx.lineWidth = 1.5;
+          ctx.strokeRect(14, 14, canvas.width - 28, canvas.height - 28);
+
+          // Teks Label Gosok
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+
+          ctx.font = '700 18px "Cinzel", serif';
+          ctx.fillStyle = '#261E14';
+          ctx.fillText(titleText.toUpperCase(), canvas.width / 2, canvas.height / 2 - 12);
+
+          ctx.font = '500 12px "Plus Jakarta Sans", sans-serif';
+          ctx.fillStyle = 'rgba(38, 30, 20, 0.75)';
+          ctx.fillText(subText, canvas.width / 2, canvas.height / 2 + 14);
+
+          // Garis Dekorasi Halus di Bawah Teks
+          ctx.strokeStyle = '#261E14';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(canvas.width / 2 - 30, canvas.height / 2 + 28);
+          ctx.lineTo(canvas.width / 2 + 30, canvas.height / 2 + 28);
+          ctx.stroke();
+        };
+
+        setTimeout(updateSize, 120);
+        window.addEventListener('resize', updateSize);
+
+        const getPos = (e) => {
+          const rect = canvas.getBoundingClientRect();
+          let clientX = e.clientX;
+          let clientY = e.clientY;
+
+          if (e.touches && e.touches.length > 0) {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+          }
+          return {
+            x: clientX - rect.left,
+            y: clientY - rect.top
+          };
+        };
+
+        const scratch = (pos) => {
+          if (isCleared) return;
+          ctx.globalCompositeOperation = 'destination-out';
+          ctx.beginPath();
+          ctx.arc(pos.x, pos.y, 38, 0, Math.PI * 2);
+          ctx.fill();
+        };
+
+        const checkClearPercentage = () => {
+          scratchCheckCounter++;
+          if (scratchCheckCounter % 6 !== 0) return;
+
+          const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const data = imgData.data;
+          let transparentCount = 0;
+
+          // Cek saluran alfa
+          for (let i = 3; i < data.length; i += 4) {
+            if (data[i] < 128) {
+              transparentCount++;
+            }
+          }
+
+          const total = canvas.width * canvas.height;
+          if (transparentCount / total > 0.48) {
+            isCleared = true;
+            canvas.classList.add('cleared');
+            if (cardItem) cardItem.classList.add('unlocked');
+            soundSystem.playHarmonicWarmth();
+          }
+        };
+
+        const handleStart = (e) => {
+          if (isCleared) return;
+          isDrawing = true;
+          scratch(getPos(e));
+        };
+
+        const handleMove = (e) => {
+          if (!isDrawing || isCleared) return;
+          if (e.cancelable) e.preventDefault(); // Cegah halaman ikut ter-scroll saat sedang menggosok kartu
+          scratch(getPos(e));
+          checkClearPercentage();
+        };
+
+        const handleEnd = () => {
+          isDrawing = false;
+        };
+
+        canvas.addEventListener('mousedown', handleStart);
+        canvas.addEventListener('mousemove', handleMove);
+        window.addEventListener('mouseup', handleEnd);
+
+        canvas.addEventListener('touchstart', handleStart, { passive: false });
+        canvas.addEventListener('touchmove', handleMove, { passive: false });
+        window.addEventListener('touchend', handleEnd);
+      });
+    }
+
+    // Jalankan inisialisasi Scratch Pads
+    window.addEventListener('load', () => {
+      initScratchPads();
+    });
+
+    // ========================================================
+    // CARE KIT & ENERGI PULIH
+    // ========================================================
+    function showNotificationToast(text) {
+      const toast = document.createElement('div');
+      toast.style.position = 'fixed';
+      toast.style.bottom = '24px';
+      toast.style.left = '50%';
+      toast.style.transform = 'translateX(-50%) translateY(20px)';
+      toast.style.background = 'rgba(45, 40, 35, 0.94)';
+      toast.style.color = '#FFFDF9';
+      toast.style.padding = '9px 18px';
+      toast.style.borderRadius = '30px';
+      toast.style.fontSize = '0.82rem';
+      toast.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
+      toast.style.zIndex = '300';
+      toast.style.transition = 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+      toast.textContent = text;
+      document.body.appendChild(toast);
+
+      setTimeout(() => { toast.style.transform = 'translateX(-50%) translateY(0)'; }, 20);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(15px)';
+        setTimeout(() => toast.remove(), 350);
+      }, 2600);
+    }
+
+    document.getElementById('item-tea').addEventListener('click', () => {
+      showNotificationToast('Uap hangat teh jahe bantu melegakan hidung mampet dan tenggorokan.');
+      soundSystem.playHarmonicWarmth();
+    });
+
+    document.getElementById('item-compress').addEventListener('click', () => {
+      showNotificationToast('Kompres lembut ditempelkan di kening... meredakan pusing dan suhu badan.');
+      soundSystem.playHarmonicWarmth();
+    });
+
+    document.getElementById('item-blanket').addEventListener('click', () => {
+      showNotificationToast('Selimut hangat terpasang. Selamat beristirahat dengan nyaman.');
+      soundSystem.playHarmonicWarmth();
+    });
+
+    document.getElementById('item-water').addEventListener('click', () => {
+      showNotificationToast('Segelas air putih hangat diminum. Suhu tubuh perlahan stabil.');
+      soundSystem.playHarmonicWarmth();
+    });
+
+    // Tambah Energi Pemulihan (+15%)
+    let recoveryEnergy = 40;
+    const energyBarProgress = document.getElementById('energy-bar-progress');
+    const energyMetricText = document.getElementById('energy-metric-text');
+    const btnSendBlessing = document.getElementById('btn-send-blessing');
+
+    btnSendBlessing.addEventListener('click', (e) => {
+      recoveryEnergy = Math.min(100, recoveryEnergy + 15);
+      energyBarProgress.style.width = recoveryEnergy + '%';
+      energyMetricText.textContent = recoveryEnergy + '%';
+
+      soundSystem.playHarmonicWarmth();
+
+      if (recoveryEnergy === 100) {
+        energyMetricText.textContent = '100% Penuh! Semoga beneran bisa terwujud yaaaa';
+      }
+
+      for (let i = 0; i < 4; i++) {
+        const svgBlessing = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svgBlessing.setAttribute('class', 'floating-blessing-svg');
+        svgBlessing.setAttribute('viewBox', '0 0 24 24');
+        svgBlessing.setAttribute('fill', 'currentColor');
+        svgBlessing.innerHTML = '<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>';
+        
+        svgBlessing.style.left = (e.clientX + (Math.random() * 50 - 25)) + 'px';
+        svgBlessing.style.top = (e.clientY + (Math.random() * 30 - 15)) + 'px';
+        svgBlessing.style.setProperty('--dx', (Math.random() * 60 - 30) + 'px');
+        document.body.appendChild(svgBlessing);
+        setTimeout(() => svgBlessing.remove(), 1600);
+      }
+    });
+
+    // Toggle Mode Redup Mata & Suara
+    const btnToggleDim = document.getElementById('btn-toggle-dim');
+    const labelDim = document.getElementById('label-dim');
+    btnToggleDim.addEventListener('click', () => {
+      document.body.classList.toggle('soothing-mode');
+      const isDim = document.body.classList.contains('soothing-mode');
+      labelDim.textContent = isDim ? 'Terang' : 'Redup';
+    });
+
+    const btnToggleSound = document.getElementById('btn-toggle-sound');
+    const labelSound = document.getElementById('label-sound');
+    let userManuallyStopped = false;
+
+    function updateSoundUI(isPlaying) {
+      if (isPlaying) {
+        labelSound.textContent = 'Nyala';
+        btnToggleSound.style.background = 'rgba(197, 160, 89, 0.25)';
+        btnToggleSound.style.borderColor = 'rgba(197, 160, 89, 0.5)';
+      } else {
+        labelSound.textContent = 'Musik';
+        btnToggleSound.style.background = 'rgba(197, 160, 89, 0.08)';
+        btnToggleSound.style.borderColor = 'transparent';
+      }
+    }
+
+    function autoStartMusic() {
+      if (userManuallyStopped) return;
+      soundSystem.initContext();
+      soundSystem.isAudioEnabled = true;
+      if (soundSystem.bgMusic) {
+        const p = soundSystem.bgMusic.play();
+        if (p !== undefined) {
+          p.then(() => {
+            updateSoundUI(true);
+            removeFirstGestureListeners();
+          }).catch(err => {
+            // Autoplay dicegah oleh kebijakan browser, menunggu gesture pertama
+            console.log('Autoplay ditunda menunggu interaksi pengguna pertama');
+          });
+        }
+      }
+    }
+
+    const gestureEvents = ['pointerdown', 'touchstart', 'click', 'keydown', 'scroll'];
+    function onFirstInteraction() {
+      if (userManuallyStopped) return;
+      if (soundSystem.bgMusic && soundSystem.bgMusic.paused) {
+        soundSystem.initContext();
+        soundSystem.isAudioEnabled = true;
+        soundSystem.bgMusic.play().then(() => {
+          updateSoundUI(true);
+        }).catch(() => {});
+      }
+      removeFirstGestureListeners();
+    }
+
+    function removeFirstGestureListeners() {
+      gestureEvents.forEach(evt => window.removeEventListener(evt, onFirstInteraction));
+    }
+
+    gestureEvents.forEach(evt => {
+      window.addEventListener(evt, onFirstInteraction, { once: true, passive: true });
+    });
+
+    window.addEventListener('DOMContentLoaded', autoStartMusic);
+    window.addEventListener('load', autoStartMusic);
+
+    btnToggleSound.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (soundSystem.bgMusic && !soundSystem.bgMusic.paused) {
+        // Pengguna sengaja mematikan musik lewat tombol
+        userManuallyStopped = true;
+        soundSystem.isAudioEnabled = false;
+        soundSystem.stopAmbient();
+        updateSoundUI(false);
+      } else {
+        // Pengguna menyalakan kembali musik lewat tombol
+        userManuallyStopped = false;
+        soundSystem.isAudioEnabled = true;
+        soundSystem.initContext();
+        soundSystem.startAmbientLofi();
+        updateSoundUI(true);
+      }
+    });
+
+    // Interaktivitas Tambahan: Klik pada Card 3 Unlocked untuk Toggle Suara Video Card 3
+    const card3Box = document.querySelector('#card-wrap-3 .scratch-stage-box');
+    const card3Video = document.querySelector('#card-wrap-3 video');
+    if (card3Box && card3Video) {
+      card3Box.addEventListener('click', () => {
+        if (document.getElementById('card-wrap-3').classList.contains('unlocked')) {
+          card3Video.muted = !card3Video.muted;
+          showNotificationToast(card3Video.muted ? 'Suara video dimatikan' : 'Suara video diaktifkan');
+        }
+      });
+    }
+  </script>
+</body>
+</html>
